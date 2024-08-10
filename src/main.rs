@@ -7,7 +7,7 @@ fn prime_sieve(max_no: u32) {
     let mut primes = vec![true; max_no.try_into().unwrap()];
     let limit = max_no;
 
-    // remove all the 2 ones first - treat this as a special case
+    // remove all the even ones first - treat this as a special case
     for n in (4..=primes.len()).step_by(2) {
         if n % 2 == 0 {
             primes[n - 1] = false;
