@@ -6,7 +6,7 @@ fn main() {
 }
 
 fn prime_sieve(max_no: u64) {
-    let mut primes = vec![true; max_no.try_into().unwrap()];
+    let mut primes = vec![true; (max_no).try_into().unwrap()];
     let limit = max_no;
 
     // remove all the even ones first - treat this as a special case

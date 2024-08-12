@@ -1,3 +1,5 @@
-# Initial Implementation of the Sieve of Eratosthenes.
+# Implementation of the Sieve of Eratosthenes.
 
-Note - this is a first pass and will require optimisation and making more rust like
+## TODO
+### Use Command line arguments
+### Output more information
