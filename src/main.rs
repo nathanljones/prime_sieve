@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 fn main() {
     println!("Hello, world!");
-    prime_sieve(10000000);
+    prime_sieve(100000000);
 }
 
 fn prime_sieve(max_no: u64) {
@@ -22,13 +22,20 @@ fn prime_sieve(max_no: u64) {
         if !primes[(n - 1) as usize] {
             continue;
         }
-        // main sieve check
+
+        // starting number needs to be the square of the number as smaller ones are either prime
+        // or marked already e.g. 5, start at 25 as prior multiples of 5 have been already marked
         let starting_number = n * n;
         if starting_number > max_no {
             break;
         }
-        //let starting_number = starting_number - 1;
-        for j in (starting_number..=max_no).step_by(2) {
+
+        // increment by odd mulitples only
+        // e.g. 5 x 1 = 5
+        //      5 x 2 = 10 - even number so no point in checking
+        //      5 x 3 = 15
+        //      5 x 4 = 20 - even number so no point in checking
+        for j in (starting_number..=max_no).step_by((n * 2) as usize) {
             if j % n == 0 {
                 primes[(j - 1) as usize] = false;
             }
@@ -64,6 +71,7 @@ fn has_correct_no_primes(prime_sieve: &[bool]) -> bool {
     let prime_sieve_length: i32 = prime_sieve.len() as i32;
     if prime_check.contains_key(&prime_sieve_length) {
         let prime_count = prime_sieve.iter().filter(|val| **val).count();
+        // need to take away 1 as I've included 1 as a prime - the above table does not
         let prime_count = prime_count - 1;
         println!("FOUND {0} PRIMES", prime_count);
         prime_count == prime_check[&prime_sieve_length]
