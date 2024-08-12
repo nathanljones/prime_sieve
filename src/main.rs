@@ -1,9 +1,11 @@
+use std::collections::HashMap;
+
 fn main() {
     println!("Hello, world!");
-    prime_sieve(200);
+    prime_sieve(10000000);
 }
 
-fn prime_sieve(max_no: u32) {
+fn prime_sieve(max_no: u64) {
     let mut primes = vec![true; max_no.try_into().unwrap()];
     let limit = max_no;
 
@@ -18,19 +20,54 @@ fn prime_sieve(max_no: u32) {
         // if we encountered a false value then we can skip as this is
         // just a multiple of one which has been found
         if !primes[(n - 1) as usize] {
-            break;
+            continue;
         }
         // main sieve check
-        for j in n * n..=max_no {
+        let starting_number = n * n;
+        if starting_number > max_no {
+            break;
+        }
+        //let starting_number = starting_number - 1;
+        for j in (starting_number..=max_no).step_by(2) {
             if j % n == 0 {
                 primes[(j - 1) as usize] = false;
             }
         }
     }
+
+    if has_correct_no_primes(&primes) {
+        println!("PRIME NO CHECK: PASSED");
+    } else {
+        println!("PRIME NO CHECK: FAILED");
+    }
+
     // now write out all our prime numbers
-    for n in 1..=primes.len() {
+    /*for n in 1..=primes.len() {
         if primes[n - 1] {
             println!("{}", n);
         }
+    }*/
+}
+
+fn has_correct_no_primes(prime_sieve: &[bool]) -> bool {
+    let prime_check = HashMap::from([
+        (10, 4),
+        (100, 25),
+        (1000, 168),
+        (10000, 1229),
+        (100000, 9592),
+        (1000000, 78498),
+        (10000000, 664579),
+        (100000000, 5761455),
+    ]);
+
+    let prime_sieve_length: i32 = prime_sieve.len() as i32;
+    if prime_check.contains_key(&prime_sieve_length) {
+        let prime_count = prime_sieve.iter().filter(|val| **val).count();
+        let prime_count = prime_count - 1;
+        println!("FOUND {0} PRIMES", prime_count);
+        prime_count == prime_check[&prime_sieve_length]
+    } else {
+        false
     }
 }
