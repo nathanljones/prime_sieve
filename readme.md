@@ -2,4 +2,3 @@
 
 ## TODO
 ### Use Command line arguments
-### Output more information

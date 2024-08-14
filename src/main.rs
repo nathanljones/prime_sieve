@@ -1,11 +1,23 @@
 use std::collections::HashMap;
-
+use std::time::Instant;
 fn main() {
-    println!("Hello, world!");
-    prime_sieve(100000000);
+    let now = Instant::now();
+    let mut no_passes: u128 = 1;
+    let mut duration: u128 = 0;
+    while now.elapsed().as_secs() < 5 {
+        let start_of_pass: Instant = Instant::now();
+        prime_sieve(1000000, true);
+        no_passes += 1;
+        duration += start_of_pass.elapsed().as_millis();
+    }
+
+    let avg_passes: f64 = (duration / no_passes) as f64;
+    println!("No Passes {no_passes}");
+    println!("Average duration {avg_passes} miliseconds");
+    println!("Finished");
 }
 
-fn prime_sieve(max_no: u64) {
+fn prime_sieve(max_no: u64, bypass_check: bool) {
     let mut primes = vec![true; (max_no).try_into().unwrap()];
     let limit = max_no;
 
@@ -41,13 +53,13 @@ fn prime_sieve(max_no: u64) {
             }
         }
     }
-
-    if has_correct_no_primes(&primes) {
-        println!("PRIME NO CHECK: PASSED");
-    } else {
-        println!("PRIME NO CHECK: FAILED");
+    if !bypass_check {
+        if has_correct_no_primes(&primes) {
+            println!("PRIME NO CHECK: PASSED");
+        } else {
+            println!("PRIME NO CHECK: FAILED");
+        }
     }
-
     // now write out all our prime numbers
     /*for n in 1..=primes.len() {
         if primes[n - 1] {
@@ -57,7 +69,7 @@ fn prime_sieve(max_no: u64) {
 }
 
 fn has_correct_no_primes(prime_sieve: &[bool]) -> bool {
-    let prime_check = HashMap::from([
+    let prime_check: HashMap<u64, usize> = HashMap::from([
         (10, 4),
         (100, 25),
         (1000, 168),
@@ -66,9 +78,11 @@ fn has_correct_no_primes(prime_sieve: &[bool]) -> bool {
         (1000000, 78498),
         (10000000, 664579),
         (100000000, 5761455),
+        (1000000000, 50847534),
+        (10000000000, 455052511),
     ]);
 
-    let prime_sieve_length: i32 = prime_sieve.len() as i32;
+    let prime_sieve_length: u64 = prime_sieve.len() as u64;
     if prime_check.contains_key(&prime_sieve_length) {
         let prime_count = prime_sieve.iter().filter(|val| **val).count();
         // need to take away 1 as I've included 1 as a prime - the above table does not
