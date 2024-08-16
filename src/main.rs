@@ -18,11 +18,13 @@ fn main() {
     let program_parameters = ProgramParameters::parse();
 
     let now = Instant::now();
-    let mut no_passes: u128 = 1;
+    let mut no_passes: u64 = 1;
     let mut duration: u128 = 0;
     let mut first_pass: bool = true;
     while now.elapsed().as_secs() < program_parameters.seconds as u64 {
         let start_of_pass: Instant = Instant::now();
+        // only on the first pass run the prime number checker if required
+        // otherwise it will print out on every pass
         if first_pass {
             prime_sieve(program_parameters.limit, program_parameters.bypass_check);
             first_pass = false;
@@ -33,7 +35,9 @@ fn main() {
         duration += start_of_pass.elapsed().as_millis();
     }
 
-    let avg_passes: f64 = (duration / no_passes) as f64;
+    // NB this code will panic if using really large numbers
+    // but large numbers isn't the point of this exercise
+    let avg_passes: f64 = duration as f64 / no_passes as f64;
     println!("No Passes {no_passes}");
     println!("Average duration {avg_passes} miliseconds");
     println!("Finished");
