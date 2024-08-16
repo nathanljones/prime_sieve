@@ -1,12 +1,34 @@
+use clap::Parser;
 use std::collections::HashMap;
 use std::time::Instant;
+
+#[derive(Parser, Default, Debug)]
+#[command(version, about = "A Prime Number Sieve Implementation")]
+struct ProgramParameters {
+    #[arg(default_value_t = 5, short, long)]
+    /// number of seconds to run for
+    seconds: u32,
+    #[arg(default_value_t = 10000, short, long)]
+    /// maximum number of primes to look for   
+    limit: u64,
+    #[clap(long, short, action)]
+    bypass_check: bool,
+}
 fn main() {
+    let program_parameters = ProgramParameters::parse();
+
     let now = Instant::now();
     let mut no_passes: u128 = 1;
     let mut duration: u128 = 0;
-    while now.elapsed().as_secs() < 5 {
+    let mut first_pass: bool = true;
+    while now.elapsed().as_secs() < program_parameters.seconds as u64 {
         let start_of_pass: Instant = Instant::now();
-        prime_sieve(1000000, true);
+        if first_pass {
+            prime_sieve(program_parameters.limit, program_parameters.bypass_check);
+            first_pass = false;
+        } else {
+            prime_sieve(program_parameters.limit, true);
+        }
         no_passes += 1;
         duration += start_of_pass.elapsed().as_millis();
     }
