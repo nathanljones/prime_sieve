@@ -21,7 +21,7 @@ fn main() {
     let mut no_passes: u64 = 1;
     let mut duration: u128 = 0;
     let mut first_pass: bool = true;
-    while now.elapsed().as_secs() < program_parameters.seconds as u64 {
+    while now.elapsed().as_secs() < u64::from(program_parameters.seconds) {
         let start_of_pass: Instant = Instant::now();
         // only on the first pass run the prime number checker if required
         // otherwise it will print out on every pass
@@ -100,12 +100,12 @@ fn has_correct_no_primes(prime_sieve: &[bool]) -> bool {
         (100, 25),
         (1000, 168),
         (10000, 1229),
-        (100000, 9592),
-        (1000000, 78498),
-        (10000000, 664579),
-        (100000000, 5761455),
-        (1000000000, 50847534),
-        (10000000000, 455052511),
+        (100_000, 9592),
+        (1_000_000, 78_498),
+        (10_000_000, 664_579),
+        (100_000_000, 5_761_455),
+        (1_000_000_000, 50_847_534),
+        (10_000_000_000, 455_052_511),
     ]);
 
     let prime_sieve_length: u64 = prime_sieve.len() as u64;
@@ -113,7 +113,7 @@ fn has_correct_no_primes(prime_sieve: &[bool]) -> bool {
         let prime_count = prime_sieve.iter().filter(|val| **val).count();
         // need to take away 1 as I've included 1 as a prime - the above table does not
         let prime_count = prime_count - 1;
-        println!("FOUND {0} PRIMES", prime_count);
+        println!("FOUND {prime_count} PRIMES");
         prime_count == prime_check[&prime_sieve_length]
     } else {
         false
