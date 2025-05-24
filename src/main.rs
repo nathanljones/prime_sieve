@@ -39,13 +39,16 @@ fn main() {
     // but large numbers isn't the point of this exercise
     let avg_passes: f64 = duration as f64 / no_passes as f64;
     println!("No Passes {no_passes}");
-    println!("Average duration {avg_passes} miliseconds");
+    println!("Average duration {avg_passes} milliseconds");
     println!("Finished");
 }
 
 fn prime_sieve(max_no: u64, bypass_check: bool) {
-    let mut primes = vec![true; (max_no).try_into().unwrap()];
+    let mut primes = vec![true; max_no.try_into().unwrap()];
     let limit = max_no;
+
+    // 1 is not a prime number so remove
+    primes[0] = false;
 
     // remove all the even ones first - treat this as a special case
     for n in (4..=primes.len()).step_by(2) {
@@ -68,7 +71,7 @@ fn prime_sieve(max_no: u64, bypass_check: bool) {
             break;
         }
 
-        // increment by odd mulitples only
+        // increment by odd multiples only
         // e.g. 5 x 1 = 5
         //      5 x 2 = 10 - even number so no point in checking
         //      5 x 3 = 15
@@ -86,12 +89,6 @@ fn prime_sieve(max_no: u64, bypass_check: bool) {
             println!("PRIME NO CHECK: FAILED");
         }
     }
-    // now write out all our prime numbers
-    /*for n in 1..=primes.len() {
-        if primes[n - 1] {
-            println!("{}", n);
-        }
-    }*/
 }
 
 fn has_correct_no_primes(prime_sieve: &[bool]) -> bool {
@@ -111,8 +108,6 @@ fn has_correct_no_primes(prime_sieve: &[bool]) -> bool {
     let prime_sieve_length: u64 = prime_sieve.len() as u64;
     if prime_check.contains_key(&prime_sieve_length) {
         let prime_count = prime_sieve.iter().filter(|val| **val).count();
-        // need to take away 1 as I've included 1 as a prime - the above table does not
-        let prime_count = prime_count - 1;
         println!("FOUND {prime_count} PRIMES");
         prime_count == prime_check[&prime_sieve_length]
     } else {
